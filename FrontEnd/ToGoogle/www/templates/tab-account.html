@@ -1,9 +1,30 @@
 <ion-view view-title="Account">
-  <ion-content>
-    <ion-list>
-    <ion-toggle  ng-model="settings.enableFriends">
-        Enable Friends
-    </ion-toggle>
-    </ion-list>
-  </ion-content>
+    <ion-content>
+            <ion-list>
+                <ion-item class="text-center">
+                    <img style="width:70px;height:70px;border-radius:35px;" src="img/ionic.png"/>
+                </ion-item>
+                <label class="item item-input">
+                    <span class="input-label">First Name</span>
+                    <input type="text" placeholder="First Name" value="Grant">
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Last Name</span>
+                    <input type="text" placeholder="Last Name" value="Isom">
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Email Address</span>
+                    <input type="text" placeholder="Email Address" value="grant.isom@gmail.com">
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Password</span>
+                    <input type="password" placeholder="Password" value="nicholas">
+                </label>
+            </div>
+            <ion-toggle  ng-model="settings.enableFriends">
+                Make Posts Public
+            </ion-toggle>
+        </ion-list>
+        <button class="button button-light button-full">Save</button>
+    </ion-content>
 </ion-view>

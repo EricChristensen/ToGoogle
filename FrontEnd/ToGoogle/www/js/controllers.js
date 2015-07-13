@@ -19,6 +19,8 @@ angular.module('starter.controllers', [])
 
 .controller('NoteDetailCtrl', function($scope, $stateParams, Notes) {
   $scope.note = Notes.get($stateParams.noteId);
+  // $scope.query = encodeURI(note.name);
+
 })
 
 .controller('AccountCtrl', function($scope) {
