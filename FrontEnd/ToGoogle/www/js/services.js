@@ -7,19 +7,21 @@ angular.module('starter.services', [])
   var notes = [{
     id: 0,
     name: 'The 2014 Tsunami in Japan',
-    lastText: 'You on your way?',
-    face: 'https://pbs.twimg.com/profile_images/514549811765211136/9SgAuHeY.png'
-  }, {
+    fact1: 'It was really big.',
+    fact2: 'People got hurt.',
+    fact3: 'Did I mention it was huge?',
+    summary: 'So in 2014, there was this really big hurricane that crashed super hard on a lot of people. It was pretty terrible, and pretty rough. Let`s just say it was no bueno.',
+    reference: 'http://grantisom.com/'
+},
+{
     id: 1,
-    name: 'Good and bad rashes',
-    lastText: 'Hey, it\'s me',
-    face: 'https://avatars3.githubusercontent.com/u/11214?v=3&s=460'
-  },{
-    id: 2,
-    name: 'Why girls dont talk to you',
-    lastText: 'I should buy a boat',
-    face: 'https://pbs.twimg.com/profile_images/479090794058379264/84TKj_qa.jpeg'
-  }];
+    name: 'McDonald`s declining sales',
+    fact1: '',
+    fact2: '',
+    fact3: '',
+    reference: ''
+
+}];
 
   return {
     all: function() {
