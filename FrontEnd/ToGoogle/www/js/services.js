@@ -15,7 +15,7 @@ angular.module('starter.services', [])
 },
 {
     id: 1,
-    name: 'McDonald`s declining sales',
+    name: 'McDonalds declining sales',
     fact2: '',
     fact3: '',
     reference: ''

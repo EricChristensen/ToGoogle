@@ -17,9 +17,9 @@ angular.module('starter.controllers', [])
   }
 })
 
-.controller('NoteDetailCtrl', function($scope, $stateParams, Notes) {
+.controller('NoteDetailCtrl', function($scope, $stateParams, Notes, $sce) {
   $scope.note = Notes.get($stateParams.noteId);
-  // $scope.query = encodeURI(note.name);
+  $scope.currentURL = $sce.trustAsResourceUrl('https://duckduckgo.com/?q='+ encodeURI($scope.note.name) +'&kp=-1&kl=us-en');
 
 })
 
