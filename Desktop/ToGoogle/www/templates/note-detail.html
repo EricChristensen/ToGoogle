@@ -1,0 +1,45 @@
+<ion-view view-title="Dashboard">
+    <ion-content class="">
+        <div class="row topbar">
+            <div class="col col-75">
+                <iframe sandbox="allow-same-origin allow-scripts allow-popups allow-forms" ng-src="{{note.currentURL}}" height="75vh" ></iframe>
+            </div>
+            <div class="col col-25">
+                <div class="card">
+                    <div class="item item-divider">
+                        Facts
+                    </div>
+                    <label class="item item-input item-floating-label">
+                        <span class="input-label">Fact 1</span>
+                        <input type="text" placeholder="Fact 1" value="{{notey.fact1}}">
+                    </label>
+                    <label class="item item-input item-floating-label">
+                        <span class="input-label">Fact 2</span>
+                        <input type="text" placeholder="Fact 2" value="{{notey.fact2}}">
+                    </label>
+                    <label class="item item-input item-floating-label">
+                        <span class="input-label">Fact 3</span>
+                        <input type="text" placeholder="Fact 3" value="{{notey.fact3}}">
+                    </label>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row bottombar">
+        <div class="col col-75">
+            <div class="card">
+                <div class="item item-divider">
+                    Summary
+                </div>
+                <ion-item>
+                    <textarea>{{notey.summary}}</textarea>
+                </ion-item>
+            </div>
+        </div>
+        <div class="col col-25 text-center">
+            <button style="min-width:260px;" class=" down button button-positive button-outline button-large">Save Note</button>
+        </div>
+    </div>
+</ion-content>
+</ion-view>
