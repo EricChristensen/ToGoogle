@@ -4,37 +4,40 @@ angular.module('starter.services', [])
   // Might use a resource here that returns a JSON array
 
   // Some fake testing data
-  var notes = [{
+  var Notes = [{
     id: 0,
     name: 'The 2014 Tsunami in Japan',
-    lastText: 'You on your way?',
-    face: 'https://pbs.twimg.com/profile_images/514549811765211136/9SgAuHeY.png'
-  }, {
+    fact1: 'It was really big.',
+    fact2: 'People got hurt.',
+    fact3: 'Did I mention it was huge?',
+    summary: 'So in 2014, there was this really big hurricane that crashed super hard on a lot of people. It was pretty terrible, and pretty rough. Let`s just say it was no bueno.',
+    reference: 'http://grantisom.com/'
+},
+{
     id: 1,
-    name: 'Good and bad rashes',
-    lastText: 'Hey, it\'s me',
-    face: 'https://avatars3.githubusercontent.com/u/11214?v=3&s=460'
-  },{
-    id: 2,
-    name: 'Why girls dont talk to you',
-    lastText: 'I should buy a boat',
-    face: 'https://pbs.twimg.com/profile_images/479090794058379264/84TKj_qa.jpeg'
-  }];
+    name: 'McDonalds declining sales',
+    fact2: '',
+    fact3: '',
+    reference: ''
+
+}];
 
   return {
     all: function() {
-      return notes;
+      return Notes;
     },
     remove: function(note) {
-      chats.splice(notes.indexOf(note), 1);
+      Notes.splice(Notes.indexOf(note), 1);
     },
     get: function(noteId) {
-      for (var i = 0; i < notes.length; i++) {
-        if (notes[i].id === parseInt(noteId)) {
-          return notes[i];
+      for (var i = 0; i < Notes.length; i++) {
+        if (Notes[i].id === parseInt(noteId)) {
+          return Notes[i];
         }
       }
       return null;
-    }
+  },add: function(note) {
+    Notes.push(note);
+  },
   };
 });

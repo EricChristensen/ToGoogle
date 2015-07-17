@@ -1,9 +1,28 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope, $sce) {
-    $scope.note = {};
-    $scope.note.name = "Grant Isom";
-    $scope.note.currentURL = $sce.trustAsResourceUrl('https://duckduckgo.com/?q='+ $scope.note.name +'&kp=-1&kl=us-en');
+.controller('DashCtrl', function($scope, $sce, $http, Notes) {
+
+    $scope.query = {};
+    $scope.query.text = "";
+
+    $scope.search = function() {
+        $scope.query.currentURL = $sce.trustAsResourceUrl('https://duckduckgo.com/?q='+ $scope.query.text +'&kp=-1&kl=us-en');
+    }
+
+    $scope.newNote = {};
+    $scope.newNote.id = 2;
+
+    $scope.save = function(note) {
+        $scope.newNote.name = $scope.query.text;
+        Notes.add(note);
+    }
+
+
+    $http.get('http://togoogle-backend.herokuapp.com/notes/', {'username': 'test_user', 'password': 'testpassword'}).success(function(data, status, headers, config) {
+        console.log(data);
+    }).error(function(data, status, headers, config) {
+
+    });
 })
 
 .controller('NotesCtrl', function($scope, Notes) {
@@ -22,10 +41,11 @@ angular.module('starter.controllers', [])
 })
 
 .controller('NoteDetailCtrl', function($scope, $stateParams, Notes, $sce) {
-  $scope.note = Notes.get($stateParams.noteId);
+  $scope.notey = Notes.get($stateParams.noteId);
 
-  $scope.note.name = "tacos"
-  $scope.currentURL = $sce.trustAsResourceUrl('https://duckduckgo.com/?q='+ encodeURI($scope.note.name) +'&kp=-1&kl=us-en');
+  $scope.note = {};
+  $scope.note.name = "Grant Isom";
+  $scope.note.currentURL = $sce.trustAsResourceUrl('https://duckduckgo.com/?q='+ $scope.notey.name +'&kp=-1&kl=us-en');
 
 })
 

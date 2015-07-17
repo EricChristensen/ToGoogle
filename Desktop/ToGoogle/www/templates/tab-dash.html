@@ -1,25 +1,36 @@
-<ion-view view-title="Dashboard">
+<ion-view view-title="">
     <ion-content class="">
         <div class="row topbar">
             <div class="col col-75">
-                <iframe sandbox="allow-same-origin allow-scripts allow-popups allow-forms" ng-src="{{note.currentURL}}" height="75vh" ></iframe>
+                <iframe sandbox="allow-same-origin allow-scripts allow-popups allow-forms" ng-src="{{query.currentURL}}" height="75vh" ></iframe>
             </div>
             <div class="col col-25">
+                <h1 class="text-center">To<span style="color:#0054EE">G</span><span style="color:#D0321F">o<span style="color:#FFA900">o<span style="color:#0059E1">g<span style="color:#0F8A41">l<span style="color:#CE301C">e</h1>
+
                 <div class="card">
+                    <label class="item item-input">
+                        <span class="input-label">Search</span>
+                        <input type="text" placeholder='"iPhone Processor"' ng-model="query.text">
+                    </label>
+                </div>
+                    <a style="margin:10px;" class="button button-block text- button-outline button-balanced" ng-click="search()">Search</a>
+
+                <div class="card">
+
                     <div class="item item-divider">
                         Facts
                     </div>
                     <label class="item item-input item-floating-label">
                         <span class="input-label">Fact 1</span>
-                        <input type="text" placeholder="Fact 1">
+                        <input type="text" placeholder="Fact 1" ng-model="newNote.fact1">
                     </label>
                     <label class="item item-input item-floating-label">
                         <span class="input-label">Fact 2</span>
-                        <input type="text" placeholder="Fact 2">
+                        <input type="text" placeholder="Fact 2" ng-model="newNote.fact2">
                     </label>
                     <label class="item item-input item-floating-label">
                         <span class="input-label">Fact 3</span>
-                        <input type="text" placeholder="Fact 3">
+                        <input type="text" placeholder="Fact 3" ng-model="newNote.fact3">
                     </label>
 
                 </div>
@@ -33,12 +44,12 @@
                     Summary
                 </div>
                 <ion-item>
-                    <textarea></textarea>
+                    <textarea ng-model="newNote.summary"></textarea>
                 </ion-item>
             </div>
         </div>
         <div class="col col-25 text-center">
-            <button style="min-width:260px;" class=" down button button-positive button-outline button-large">Save Note</button>
+            <button style="min-width:260px;" class=" down button button-positive button-outline button-large" ng-click="save(newNote)">Save Note</button>
         </div>
     </div>
 </ion-content>
