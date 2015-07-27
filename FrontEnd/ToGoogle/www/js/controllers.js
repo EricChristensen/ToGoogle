@@ -35,7 +35,17 @@ angular.module('starter.controllers', [])
     $scope.note = {};
       $http.post('https://togoogle-backend.herokuapp.com/notes/single/', {'username': 'test_user', password: 'testpassword', 'note_id': $stateParams.noteId}).success(function(data, status, headers, config) {
           $scope.note = data;
+	  $scope.note.facts = [];
           console.log(data);
+	  /*
+	    for each datapoint in datapoints
+	    if the data point is there
+	      scope.note[i] = datapoint
+
+	  */
+	  /*data['data_points'].map(funtion(data_point, rank){
+	      
+	  });*/
           if (data['data_points'][0]) {
               $scope.note.fact1 = data['data_points'][0]['datum'];
               $scope.note.fact1_data = data['data_points'][0];
