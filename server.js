@@ -1,4 +1,4 @@
-var express = require('express'),
+var express = require('express');
     app = express();
 app.use(express.static('Desktop/ToGoogle/www'));
 app.set('port', process.env.PORT || 5000);
