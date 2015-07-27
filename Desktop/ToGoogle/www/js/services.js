@@ -1,5 +1,38 @@
 angular.module('starter.services', [])
 
+.service('LoginService', function($q, $http) {
+    return {
+	loginUser: function(name, pw) {
+	    var deferred = $q.defer();
+	    var promise = deferred.promise;
+	    
+	    if (name == 'user' && pw == 'secret') {
+		deferred.resolve('Welcome ' + name + '!');
+	    } else {
+		deferred.reject('Wrong credentials.');
+	    }
+	    promise.success = function(fn) {
+		promise.then(fn);
+		return promise;
+	    }
+	    promise.error = function(fn) {
+		promise.then(null, fn);
+		return promise;
+	    }
+	    return promise;
+	}
+    }
+})
+
+.service('Globals', function(){
+    return {
+	backendHostName: function(){
+	    return "https://togoogle-backend.herokuapp.com/";
+	}
+    }
+})
+
+
 .factory('Notes', function($http) {
     // Might use a resource here that returns a JSON array
 

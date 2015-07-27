@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope, $sce, $http, Notes) {
+.controller('DashCtrl', function($scope, $sce, $http, Notes, Globals) {
     $scope.query = {};
     $scope.query.text = "";
 
@@ -15,7 +15,7 @@ angular.module('starter.controllers', [])
         data_pt_2 = {'datum': $scope.newNote.fact2};
         data_pt_3 = {'datum': $scope.newNote.fact3};
         data_pts = [data_pt_1,data_pt_2,data_pt_3];
-        $http.post('https://togoogle-backend.herokuapp.com/notes/update_note/', {'username': 'test_user', password: 'testpassword', 'is_new_note': true, 'title': $scope.query.text, summary: $scope.newNote.summary, data_points: data_pts}).success(function(data, status, headers, config) {
+        $http.post(Globals.backendHostName() + 'notes/update_note/', {'username': 'test_user', password: 'testpassword', 'is_new_note': true, 'title': $scope.query.text, summary: $scope.newNote.summary, data_points: data_pts}).success(function(data, status, headers, config) {
             console.log(config);
             console.log(data);
         }).error(function(data, status, headers, config) {
@@ -26,8 +26,8 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('NotesCtrl', function($scope, Notes, $http) {
-    $http.post('https://togoogle-backend.herokuapp.com/notes/', {'username': 'test_user', password: 'testpassword'}).success(function(data, status, headers, config) {
+.controller('NotesCtrl', function($scope, Notes, $http, Globals) {
+    $http.post(Globals.backendHostName() + 'notes/', {'username': 'test_user', password: 'testpassword'}).success(function(data, status, headers, config) {
         Notes = data['notes'];
         $scope.notes = Notes;
     }).error(function(data, status, headers, config) {
@@ -37,9 +37,9 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('NoteDetailCtrl', function($scope, $stateParams, Notes, $sce, $http) {
+.controller('NoteDetailCtrl', function($scope, $stateParams, Notes, Globals, $sce, $http) {
     $scope.note = {};
-    $http.post('https://togoogle-backend.herokuapp.com/notes/single/', {'username': 'test_user', password: 'testpassword', 'note_id': $stateParams.noteId}).success(function(data, status, headers, config) {
+    $http.post(Globals.backendHostName() + 'notes/single/', {'username': 'test_user', password: 'testpassword', 'note_id': $stateParams.noteId}).success(function(data, status, headers, config) {
         $scope.notey = data;
         console.log(data);
         $scope.note.currentURL = $sce.trustAsResourceUrl('https://duckduckgo.com/?q='+ data['title'] +'&kp=-1&kl=us-en');
@@ -82,7 +82,7 @@ angular.module('starter.controllers', [])
             $scope.notey.fact3_data['datum'] = $scope.notey.fact3;
             new_data_points.push($scope.notey.fact3_data);
         }
-        $http.post('https://togoogle-backend.herokuapp.com/notes/update_note/', {'username': 'test_user', password: 'testpassword', 'note_id': $stateParams.noteId, 'is_new_note': false, 'title': '$scope.notey.title', summary: $scope.notey.summary, data_points: new_data_points}).success(function(data, status, headers, config) {
+        $http.post(Globals.backendHostName() + 'notes/update_note/', {'username': 'test_user', password: 'testpassword', 'note_id': $stateParams.noteId, 'is_new_note': false, 'title': '$scope.notey.title', summary: $scope.notey.summary, data_points: new_data_points}).success(function(data, status, headers, config) {
             console.log(config);
             console.log(data);
         }).error(function(data, status, headers, config) {
@@ -97,4 +97,19 @@ angular.module('starter.controllers', [])
     $scope.settings = {
         enableFriends: true
     };
-});
+})
+
+.controller('LoginCtrl', function($scope, LoginService, $ionicPopup, $state) {
+    $scope.data = {};
+
+    $scope.login = function() {
+	LoginService.loginUser($scope.data.username, $scope.data.password).success(function(data) {
+	    $state.go('tab.dash');
+	}).error(function(data) {
+	    var alertPopup = $ionicPopup.alert({
+		title: 'Login failed!',
+		template: 'Please check your credentials!'
+	    });
+	});
+    }
+})
