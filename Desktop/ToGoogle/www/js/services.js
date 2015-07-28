@@ -8,6 +8,20 @@ angular.module('starter.services', [])
     }
 })
 
+.service('Auth', function($http){
+    return {
+	post : function(path, username, token, data) {
+	    $http.default.headers.common['Authorization'] = 'Basic ' + Base64.encode(username + ':' + token);
+	    $http.post(path, data)
+	},
+	get  : function(path, username, token) {
+	    $http.default.headers.common['Authorization'] = 'Basic ' + Base64.encode(username + ':' + token);
+	    $http.get(path)
+	}
+	
+    }
+})
+
 
 .factory('Notes', function($http) {
     // Might use a resource here that returns a JSON array

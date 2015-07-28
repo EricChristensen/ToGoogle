@@ -15,7 +15,13 @@ angular.module('starter.controllers', ['ngCookies'])
         data_pt_2 = {'datum': $scope.newNote.fact2};
         data_pt_3 = {'datum': $scope.newNote.fact3};
         data_pts = [data_pt_1,data_pt_2,data_pt_3];
-        $http.post(Globals.backendHostName() + 'notes/update_note/', {'username': 'test_user', password: 'testpassword', 'is_new_note': true, 'title': $scope.query.text, summary: $scope.newNote.summary, data_points: data_pts}).success(function(data, status, headers, config) {
+        $http.post(Globals.backendHostName() + 'notes/update_note/', {
+	    'username': 'test_user', password: 'testpassword',
+	    'is_new_note': true,
+	    'title': $scope.query.text,
+	    summary: $scope.newNote.summary,
+	    data_points: data_pts}).
+	success(function(data, status, headers, config) {
             console.log(config);
             console.log(data);
         }).error(function(data, status, headers, config) {
@@ -94,11 +100,6 @@ angular.module('starter.controllers', ['ngCookies'])
 })
 
 .controller('AccountCtrl', function($scope, $cookies) {
-    for (key in $cookies){
-	console.log(key + ": " + $cookies[key]);
-    }
-    
-    //console.log($cookies.get('password'));
     $scope.settings = {
         enableFriends: true
     };
