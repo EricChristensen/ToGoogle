@@ -99,17 +99,27 @@ angular.module('starter.controllers', [])
     };
 })
 
-.controller('LoginCtrl', function($scope, LoginService, $ionicPopup, $state) {
+.controller('LoginCtrl', function($scope, LoginService, $ionicPopup, $state, $http, Globals) {
     $scope.data = {};
 
     $scope.login = function() {
-	LoginService.loginUser($scope.data.username, $scope.data.password).success(function(data) {
-	    $state.go('tab.dash');
-	}).error(function(data) {
-	    var alertPopup = $ionicPopup.alert({
-		title: 'Login failed!',
-		template: 'Please check your credentials!'
+	$http.post(Globals.backendHostName() + 'login/', {'username': $scope.data.username, 'password': $scope.data.password}).
+	    success(function(data, status, headers, config) {
+		if (data['success']){
+		    $state.go('tab.dash');
+		}
+		else {
+		    var alertPopup = $ionicPopup.alert({
+			title: 'Login failed!',
+			template: 'Please check your credentials!'
+		    });
+		}
+	    }).error(function(data, status, headers, config){
+		var alertPopup = $ionicPopup.alert({
+		    title: 'Login failed!',
+		    template: 'Could not connect to login service!'
+		});		
 	    });
-	});
-    }
+    };
+
 })

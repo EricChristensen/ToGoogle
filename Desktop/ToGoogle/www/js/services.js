@@ -1,14 +1,17 @@
 angular.module('starter.services', [])
 
-.service('LoginService', function($q, $http) {
+    .service('LoginService', function($q, $http, Globals) {
     return {
-	loginUser: function(name, pw) {
+	loginUser: function(username, password) {
 	    var deferred = $q.defer();
 	    var promise = deferred.promise;
 	    
-	    if (name == 'user' && pw == 'secret') {
-		deferred.resolve('Welcome ' + name + '!');
+	    var loginResult = $http.post(Globals.backendHostName() + 'login/', {'username': username, 'password': password});	    
+	    if (loginResult.success) {
+		deferred.resolve(loginResult);
 	    } else {
+		alert('failed!');
+		console.log(loginResult.error);
 		deferred.reject('Wrong credentials.');
 	    }
 	    promise.success = function(fn) {
