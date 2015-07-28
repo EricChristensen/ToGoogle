@@ -1,4 +1,4 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['ngCookies'])
 
 .controller('DashCtrl', function($scope, $sce, $http, Notes, Globals) {
     $scope.query = {};
@@ -93,22 +93,41 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('AccountCtrl', function($scope) {
+.controller('AccountCtrl', function($scope, $cookies) {
+    for (key in $cookies){
+	console.log(key + ": " + $cookies[key]);
+    }
+    
+    //console.log($cookies.get('password'));
     $scope.settings = {
         enableFriends: true
     };
 })
 
-.controller('LoginCtrl', function($scope, LoginService, $ionicPopup, $state, $http, Globals) {
+.controller('LoginCtrl', function($scope, $ionicPopup, $state, $http, Globals, $cookies) {
     $scope.data = {};
 
     $scope.login = function() {
-	$http.post(Globals.backendHostName() + 'login/', {'username': $scope.data.username, 'password': $scope.data.password}).
+	//$http.post(Globals.backendHostName() + 'login/token/new.json', {'username': $scope.data.username, 'password': $scope.data.password}).
+	$http({
+	    url: Globals.backendHostName() + 'login/token/new.json',
+	    method: 'POST',
+	    data : [
+		"username=" + $scope.data.username,
+		"password=" + $scope.data.password
+	    ].join('&'),
+	    headers: {
+		'Content-Type': 'application/x-www-form-urlencoded'
+	    }
+	}).
 	    success(function(data, status, headers, config) {
 		if (data['success']){
+		    $scope.login_token = data['token'];
+		    $scope.user_id     = data['user'];
 		    $state.go('tab.dash');
 		}
 		else {
+		    console.log(data + ", " + status);
 		    var alertPopup = $ionicPopup.alert({
 			title: 'Login failed!',
 			template: 'Please check your credentials!'
