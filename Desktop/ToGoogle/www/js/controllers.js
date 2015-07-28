@@ -37,7 +37,7 @@ angular.module('starter.controllers', ['ngCookies'])
 .controller('NotesCtrl', function($scope, Notes, $http, Globals, Auth, $cookies) {
     console.log('in NotesCtrl!');
     console.log('UserID: ' + $cookies['userID'] + ' loginToken: ' + $cookies['loginToken']);
-    $http.post(Globals.backendHostName() + "notes/", { //Auth.post(Globals.backendHostName() + 'notes/', $cookies['userID'], $cookies['loginToken'], { //
+    Auth.post(Globals.backendHostName() + 'notes/', $cookies['userID'], $cookies['loginToken'], { //    $http.post(Globals.backendHostName() + "notes/", { //
 	'username': 'test_user',
 	'password': 'testpassword'
     }).success(function(data, status, headers, config) {
@@ -139,7 +139,6 @@ angular.module('starter.controllers', ['ngCookies'])
 //		    $cookies['loginToken'] = data['token'];
 		    $cookies['loginToken'] = data['token'];
 		    $cookies['userID']     = data['user'];
-		    console.log('UserID: ' + $scope.userID + ', loginToken: ' + $scope.loginToken);
 		    $state.go('tab.dash');
 		}
 		else {
