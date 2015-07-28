@@ -1,6 +1,6 @@
 angular.module('starter.controllers', ['ngCookies'])
 
-.controller('DashCtrl', function($scope, $sce, $http, Notes, Globals, Auth) {
+ .controller('DashCtrl', function($scope, $sce, $http, Notes, Globals, Auth) {
     $scope.query = {};
     $scope.query.text = "";
 
@@ -15,7 +15,9 @@ angular.module('starter.controllers', ['ngCookies'])
         data_pt_2 = {'datum': $scope.newNote.fact2};
         data_pt_3 = {'datum': $scope.newNote.fact3};
         data_pts = [data_pt_1,data_pt_2,data_pt_3];
-        Auth.post(Globals.backendHostName() + 'notes/update_note/', $scope.userID, $scope.loginToken, {
+	console.log('userID:' +  $cookies['userID']);
+	console.log('logintoken: ' + $cookies['loginToken']);
+        Auth.post(Globals.backendHostName() + 'notes/update_note/', $cookies['userID'], $cookies['loginToken'], {
 	    'username': 'test_user', password: 'testpassword',
 	    'is_new_note': true,
 	    'title': $scope.query.text,
@@ -32,10 +34,12 @@ angular.module('starter.controllers', ['ngCookies'])
 
 })
 
-.controller('NotesCtrl', function($scope, Notes, $http, Globals, Auth) {
-    Auth.post(Globals.backendHostName() + 'notes/', $scope.userID, $scope.loginToken, {
+.controller('NotesCtrl', function($scope, Notes, $http, Globals, Auth, $cookies) {
+    console.log('in NotesCtrl!');
+    console.log('UserID: ' + $cookies['userID'] + ' loginToken: ' + $cookies['loginToken']);
+    $http.post(Globals.backendHostName() + "notes/", { //Auth.post(Globals.backendHostName() + 'notes/', $cookies['userID'], $cookies['loginToken'], { //
 	'username': 'test_user',
-	password: 'testpassword'
+	'password': 'testpassword'
     }).success(function(data, status, headers, config) {
         Notes = data['notes'];
         $scope.notes = Notes;
@@ -46,11 +50,11 @@ angular.module('starter.controllers', ['ngCookies'])
 
 })
 
-.controller('NoteDetailCtrl', function($scope, $stateParams, Notes, Globals, $sce, $http, Auth) {
+.controller('NoteDetailCtrl', function($scope, $stateParams, Notes, Globals, $sce, $http, Auth, $cookies) {
     $scope.note = {};
-    Auth.post(Globals.backendHostName() + 'notes/single/', $scope.userId, $scope.loginToken, {
+     Auth.post(Globals.backendHostName() + 'notes/single/', $cookies['userID'], $cookies['loginToken'], {
 	'username': 'test_user',
-	password: 'testpassword',
+	'password': 'testpassword',
 	'note_id': $stateParams.noteId
     }).success(function(data, status, headers, config) {
         $scope.notey = data;
@@ -130,8 +134,12 @@ angular.module('starter.controllers', ['ngCookies'])
 	}).
 	    success(function(data, status, headers, config) {
 		if (data['success']){
-		    $scope.loginToken = data['token'];
-		    $scope.userID     = data['user'];
+//		    $scope.user = user;
+//		    $cookies['userID'] = data['user'];
+//		    $cookies['loginToken'] = data['token'];
+		    $cookies['loginToken'] = data['token'];
+		    $cookies['userID']     = data['user'];
+		    console.log('UserID: ' + $scope.userID + ', loginToken: ' + $scope.loginToken);
 		    $state.go('tab.dash');
 		}
 		else {

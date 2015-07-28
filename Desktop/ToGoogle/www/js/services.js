@@ -8,18 +8,28 @@ angular.module('starter.services', ['base64'])
     }
 })
 
-.service('Auth', function($http, $base64){
+.service('Auth', function($http, $cookies, $base64){
     return {
-	post : function(path, username, token, data) {
-	    $http.defaults.headers.common['Authorization'] = 'Basic ' + $base64.encode(username + ':' + token);
-	    return $http.post(path, data);
+	post : function(path, data, userID, token) {
+	    var userID = userID
+	    var token  = token
+	    return $http.post(path, data, {
+		headers: { 'Authorization': 'Basic ' + $base64.encode(userID + ':' + token) }
+	    });
 	},
-	get  : function(path, username, token) {
-	    $http.defaults.headers.common['Authorization'] = 'Basic ' + $base64.encode(username + ':' + token);
-	    return $http.get(path);
+	get  : function(path, userID, token) {
+	    var userID = userID;
+	    var token  = token;
+	    return $http.get(path, {
+		headers: { 'Authorization': 'Basic ' + $base64.encode(userID + ':' + token) }
+	    });
 	}
 	
     }
+})
+
+.factory("user", function() {
+    return {};
 })
 
 
