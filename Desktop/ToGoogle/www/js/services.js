@@ -11,19 +11,27 @@ angular.module('starter.services', ['base64'])
 .service('Auth', function($http, $cookies, $base64){
     return {
 	post : function(path, userID, token, data) {
-	    var userID = userID
-	    var token  = token
 	    var authString = 'Basic ' + $base64.encode(userID + ':' + token);
-	    console.log("Auth string: " + authString);
-	    return $http.post(path, data, [{
-		headers: { 'Authorization': authString }
-	    }]);
+	    console.log("authstring: " + authString);
+	    return $http({
+		url: path,
+		method: 'POST',
+		headers: {
+		    'Authorization': authString
+		},
+		data: data
+	    });
 	},
 	get  : function(path, userID, token) {
 	    var userID = userID;
 	    var token  = token;
-	    return $http.get(path, {
-		//headers: { 'Authorization': 'Basic ' + $base64.encode(userID + ':' + token) }
+	    return $http({
+		url: path,
+		method: 'GET',
+		data: data,
+		headers: {
+		    'Authorization': 'Basic ' + $base64.encode(userID + ':' + token)
+		}
 	    });
 	}
 	
