@@ -12,11 +12,11 @@ angular.module('starter.services', ['base64'])
     return {
 	post : function(path, username, token, data) {
 	    $http.defaults.headers.common['Authorization'] = 'Basic ' + $base64.encode(username + ':' + token);
-	    $http.post(path, data)
+	    return $http.post(path, data);
 	},
 	get  : function(path, username, token) {
 	    $http.defaults.headers.common['Authorization'] = 'Basic ' + $base64.encode(username + ':' + token);
-	    $http.get(path)
+	    return $http.get(path);
 	}
 	
     }

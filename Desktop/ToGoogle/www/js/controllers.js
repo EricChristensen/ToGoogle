@@ -15,13 +15,13 @@ angular.module('starter.controllers', ['ngCookies'])
         data_pt_2 = {'datum': $scope.newNote.fact2};
         data_pt_3 = {'datum': $scope.newNote.fact3};
         data_pts = [data_pt_1,data_pt_2,data_pt_3];
-        Auth.post(Globals.backendHostName() + 'notes/update_note/', {
+        Auth.post(Globals.backendHostName() + 'notes/update_note/', $scope.userID, $scope.loginToken, {
 	    'username': 'test_user', password: 'testpassword',
 	    'is_new_note': true,
 	    'title': $scope.query.text,
 	    summary: $scope.newNote.summary,
-	    data_points: data_pts}).
-	success(function(data, status, headers, config) {
+	    data_points: data_pts
+	}).success(function(data, status, headers, config) {
             console.log(config);
             console.log(data);
         }).error(function(data, status, headers, config) {
@@ -32,8 +32,11 @@ angular.module('starter.controllers', ['ngCookies'])
 
 })
 
-.controller('NotesCtrl', function($scope, Notes, $http, Globals) {
-    $http.post(Globals.backendHostName() + 'notes/', {'username': 'test_user', password: 'testpassword'}).success(function(data, status, headers, config) {
+.controller('NotesCtrl', function($scope, Notes, $http, Globals, Auth) {
+    Auth.post(Globals.backendHostName() + 'notes/', $scope.userID, $scope.loginToken, {
+	'username': 'test_user',
+	password: 'testpassword'
+    }).success(function(data, status, headers, config) {
         Notes = data['notes'];
         $scope.notes = Notes;
     }).error(function(data, status, headers, config) {
@@ -43,9 +46,13 @@ angular.module('starter.controllers', ['ngCookies'])
 
 })
 
-.controller('NoteDetailCtrl', function($scope, $stateParams, Notes, Globals, $sce, $http) {
+.controller('NoteDetailCtrl', function($scope, $stateParams, Notes, Globals, $sce, $http, Auth) {
     $scope.note = {};
-    $http.post(Globals.backendHostName() + 'notes/single/', {'username': 'test_user', password: 'testpassword', 'note_id': $stateParams.noteId}).success(function(data, status, headers, config) {
+    Auth.post(Globals.backendHostName() + 'notes/single/', $scope.userId, $scope.loginToken, {
+	'username': 'test_user',
+	password: 'testpassword',
+	'note_id': $stateParams.noteId
+    }).success(function(data, status, headers, config) {
         $scope.notey = data;
         console.log(data);
         $scope.note.currentURL = $sce.trustAsResourceUrl('https://duckduckgo.com/?q='+ data['title'] +'&kp=-1&kl=us-en');
@@ -123,8 +130,8 @@ angular.module('starter.controllers', ['ngCookies'])
 	}).
 	    success(function(data, status, headers, config) {
 		if (data['success']){
-		    $scope.login_token = data['token'];
-		    $scope.user_id     = data['user'];
+		    $scope.loginToken = data['token'];
+		    $scope.userID     = data['user'];
 		    $state.go('tab.dash');
 		}
 		else {
