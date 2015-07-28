@@ -1,4 +1,4 @@
-angular.module('starter.services', [])
+angular.module('starter.services', ['base64'])
 
 .service('Globals', function(){
     return {
@@ -8,14 +8,14 @@ angular.module('starter.services', [])
     }
 })
 
-.service('Auth', function($http){
+.service('Auth', function($http, $base64){
     return {
 	post : function(path, username, token, data) {
-	    $http.default.headers.common['Authorization'] = 'Basic ' + Base64.encode(username + ':' + token);
+	    $http.defaults.headers.common['Authorization'] = 'Basic ' + $base64.encode(username + ':' + token);
 	    $http.post(path, data)
 	},
 	get  : function(path, username, token) {
-	    $http.default.headers.common['Authorization'] = 'Basic ' + Base64.encode(username + ':' + token);
+	    $http.defaults.headers.common['Authorization'] = 'Basic ' + $base64.encode(username + ':' + token);
 	    $http.get(path)
 	}
 	

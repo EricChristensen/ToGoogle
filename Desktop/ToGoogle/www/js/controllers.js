@@ -1,6 +1,6 @@
 angular.module('starter.controllers', ['ngCookies'])
 
-.controller('DashCtrl', function($scope, $sce, $http, Notes, Globals) {
+.controller('DashCtrl', function($scope, $sce, $http, Notes, Globals, Auth) {
     $scope.query = {};
     $scope.query.text = "";
 
@@ -15,7 +15,7 @@ angular.module('starter.controllers', ['ngCookies'])
         data_pt_2 = {'datum': $scope.newNote.fact2};
         data_pt_3 = {'datum': $scope.newNote.fact3};
         data_pts = [data_pt_1,data_pt_2,data_pt_3];
-        $http.post(Globals.backendHostName() + 'notes/update_note/', {
+        Auth.post(Globals.backendHostName() + 'notes/update_note/', {
 	    'username': 'test_user', password: 'testpassword',
 	    'is_new_note': true,
 	    'title': $scope.query.text,
