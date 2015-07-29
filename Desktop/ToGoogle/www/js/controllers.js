@@ -18,7 +18,7 @@ angular.module('starter.controllers', ['ngCookies'])
 	console.log('userID:' +  $cookies['userID']);
 	console.log('logintoken: ' + $cookies['loginToken']);
         Auth.post(Globals.backendHostName() + 'notes/update_note/', $cookies['userID'], $cookies['loginToken'], {
-	    'username': 'test_user', password: 'testpassword',
+	    //'username': 'test_user', password: 'testpassword',
 	    'is_new_note': true,
 	    'title': $scope.query.text,
 	    summary: $scope.newNote.summary,
@@ -52,8 +52,6 @@ angular.module('starter.controllers', ['ngCookies'])
 .controller('NoteDetailCtrl', function($scope, $stateParams, Notes, Globals, $sce, $http, Auth, $cookies) {
     $scope.note = {};
      Auth.post(Globals.backendHostName() + 'notes/single/', $cookies['userID'], $cookies['loginToken'], {
-	'username': 'test_user',
-	'password': 'testpassword',
 	'note_id': $stateParams.noteId
     }).success(function(data, status, headers, config) {
         $scope.notey = data;
@@ -98,7 +96,13 @@ angular.module('starter.controllers', ['ngCookies'])
             $scope.notey.fact3_data['datum'] = $scope.notey.fact3;
             new_data_points.push($scope.notey.fact3_data);
         }
-        $http.post(Globals.backendHostName() + 'notes/update_note/', {'username': 'test_user', password: 'testpassword', 'note_id': $stateParams.noteId, 'is_new_note': false, 'title': '$scope.notey.title', summary: $scope.notey.summary, data_points: new_data_points}).success(function(data, status, headers, config) {
+        $http.post(Globals.backendHostName() + 'notes/update_note/', {
+	    'note_id': $stateParams.noteId,
+	    'is_new_note': false,
+	    'title': '$scope.notey.title',
+	    summary: $scope.notey.summary,
+	    data_points: new_data_points
+	}).success(function(data, status, headers, config) {
             console.log(config);
             console.log(data);
         }).error(function(data, status, headers, config) {
