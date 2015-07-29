@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngCookies'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -82,13 +82,23 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       controller: 'LoginCtrl'
   });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise(function($cookies) {  //'/tab/dash');
-      if ($cookies['userID'] && $cookies['loginToken']){
-	  return '/tab/dash';
-      }
-      else {
-	  return '/login';
-      }
-  })
+$urlRouterProvider.otherwise(function() {  //'/tab/dash');
+    var $cookies; // get at the cookies module 
+    angular.injector(['ngCookies']).invoke(function(_$cookies_) {
+	$cookies = _$cookies_;
+    });
+    
+    console.log($cookies);
+    if ($cookies['userID'] && $cookies['loginToken']){
+	console.log($cookies['userID']);
+	console.log($cookies['loginToken']);
+	return '/tab/dash';
+    }
+    else {
+	console.log($cookies['userID']);
+	console.log($cookies['loginToken']);
+	return '/login';
+    }
+})
 
 });
