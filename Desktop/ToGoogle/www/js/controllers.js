@@ -1,6 +1,6 @@
 angular.module('starter.controllers', ['ngCookies'])
 
- .controller('DashCtrl', function($scope, $sce, $http, Notes, Globals, Auth) {
+.controller('DashCtrl', function($scope, $sce, $http, Notes, Globals, Auth) {
     $scope.query = {};
     $scope.query.text = "";
 
@@ -118,6 +118,11 @@ angular.module('starter.controllers', ['ngCookies'])
 .controller('LoginCtrl', function($scope, $ionicPopup, $state, $http, Globals, $cookies) {
     $scope.data = {};
 
+    $scope.logout = function() {
+	delete $cookies['userID'];
+	delete $cookies['loginToken'];
+    };
+    
     $scope.login = function() {
 	//$http.post(Globals.backendHostName() + 'login/token/new.json', {'username': $scope.data.username, 'password': $scope.data.password}).
 	$http({
@@ -131,28 +136,24 @@ angular.module('starter.controllers', ['ngCookies'])
 		'Content-Type': 'application/x-www-form-urlencoded'
 	    }
 	}).
-	    success(function(data, status, headers, config) {
-		if (data['success']){
-//		    $scope.user = user;
-//		    $cookies['userID'] = data['user'];
-//		    $cookies['loginToken'] = data['token'];
-		    $cookies['loginToken'] = data['token'];
-		    $cookies['userID']     = data['user'];
-		    $state.go('tab.dash');
+	success(function(data, status, headers, config) {
+	    if (data['success']){
+		$cookies['loginToken'] = data['token'];
+		$cookies['userID']     = data['user'];
+		$state.go('tab.dash');
 		}
-		else {
-		    console.log(data + ", " + status);
-		    var alertPopup = $ionicPopup.alert({
-			title: 'Login failed!',
-			template: 'Please check your credentials!'
-		    });
-		}
-	    }).error(function(data, status, headers, config){
+	    else {
+		console.log(data + ", " + status);
 		var alertPopup = $ionicPopup.alert({
 		    title: 'Login failed!',
-		    template: 'Could not connect to login service!'
-		});		
-	    });
+		    template: 'Please check your credentials!'
+		});
+	    }
+	}).error(function(data, status, headers, config){
+	    var alertPopup = $ionicPopup.alert({
+		title: 'Login failed!',
+		template: 'Could not connect to login service!'
+	    });		
+	});
     };
-
 })

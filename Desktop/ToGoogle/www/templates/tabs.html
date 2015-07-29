@@ -20,5 +20,10 @@ navigation history that also transitions its views in and out.
     <ion-nav-view name="tab-account"></ion-nav-view>
   </ion-tab>
 
+  <!-- Logout Tab -->
+  <ion-tab title="Login" icon-off="ion-power" icon-on="ion-power" ng-controller="LoginCtrl" href="#/login" on-select="logout()">
+    <ion-nav-view name="login-view"></ion-nav-view>
+  </ion-tab>
+
 
 </ion-tabs>
