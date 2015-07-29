@@ -23,18 +23,14 @@ angular.module('starter.services', ['base64'])
 	    });
 	},
 	get  : function(path, userID, token) {
-	    var userID = userID;
-	    var token  = token;
 	    return $http({
 		url: path,
 		method: 'GET',
-		data: data,
 		headers: {
 		    'Authorization': 'Basic ' + $base64.encode(userID + ':' + token)
 		}
 	    });
-	}
-	
+	}	
     }
 })
 

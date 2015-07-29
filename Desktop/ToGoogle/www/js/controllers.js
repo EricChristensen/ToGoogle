@@ -37,10 +37,9 @@ angular.module('starter.controllers', ['ngCookies'])
 .controller('NotesCtrl', function($scope, Notes, $http, Globals, Auth, $cookies) {
     console.log('in NotesCtrl!');
     console.log('UserID: ' + $cookies['userID'] + ' loginToken: ' + $cookies['loginToken']);
-    Auth.post(Globals.backendHostName() + 'notes/', $cookies['userID'], $cookies['loginToken'], { //    $http.post(Globals.backendHostName() + "notes/", { //
-	'username': 'test_user',
-	'password': 'testpassword'
-    }).success(function(data, status, headers, config) {
+    Auth.get(Globals.backendHostName() + 'notes/', $cookies['userID'], $cookies['loginToken']).
+
+    success(function(data, status, headers, config) {
         Notes = data['notes'];
         $scope.notes = Notes;
     }).error(function(data, status, headers, config) {
