@@ -137,6 +137,11 @@ angular.module('starter.controllers', ['ngCookies'])
 		"email"      : $scope.data.email
 	    }).success(function(data, status, headers, config) {
 		if (data['success']){
+		    $scope.data.username = '';
+		    $scope.data.password = '';
+		    $scope.data.firstName = '';
+		    $scope.data.lastName = '';
+		    $scope.data.email = '';
 		    $state.go('login');
 		}
 		else if (data['username_taken']){
@@ -233,6 +238,8 @@ angular.module('starter.controllers', ['ngCookies'])
 	    if (data['success']){
 		$cookies['loginToken'] = data['token'];
 		$cookies['userID']     = data['user'];
+		$scope.data.username = '';
+		$scope.data.password = '';
 		$state.go('tab.dash');
 		}
 	    else {
