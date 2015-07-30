@@ -119,9 +119,19 @@ angular.module('starter.controllers', ['ngCookies'])
 	    summary: $scope.notey.summary,
 	    data_points: new_data_points
 	}).success(function(data, status, headers, config) {
-	    $cookies['numInvitations'] = data['num_invitations'];
-            console.log(config);
-            console.log(data);
+	    if (data['success']) {
+		$cookies['numInvitations'] = data['num_invitations'];
+		var alertPopup = $ionicPopup.alert({
+		    title: 'Note Saved!',
+		    template: ''
+		}) ;
+	    }
+	    else {
+		var alertPopup = $ionicPopup.alert({
+		    title: 'Unable to save!',
+		    template: 'Error: ' + data['error']
+		}) ;
+	    }
         }).error(function(data, status, headers, config) {
             console.log(config);
             console.log(data);
