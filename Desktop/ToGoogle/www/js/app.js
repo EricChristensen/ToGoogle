@@ -76,6 +76,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       }
     }
   })
+
+  .state('new', {
+      url: '/new/:inviterID/:hash/',
+      templateUrl: 'templates/new_user.html',
+      controller: 'CreateUserCtrl'
+  })
+    
   .state('login', {
       url: '/login',
       templateUrl: 'templates/login.html',

@@ -1,6 +1,6 @@
 angular.module('starter.controllers', ['ngCookies'])
 
-.controller('DashCtrl', function($scope, $sce, $http, Notes, Globals, Auth) {
+.controller('DashCtrl', function($scope, $sce, $http, Notes, Globals, Auth, $cookies) {
     $scope.query = {};
     $scope.query.text = "";
 
@@ -24,6 +24,7 @@ angular.module('starter.controllers', ['ngCookies'])
 	    summary: $scope.newNote.summary,
 	    data_points: data_pts
 	}).success(function(data, status, headers, config) {
+	    $cookies['numInvitations'] = data['num_invitations'];
             console.log(config);
             console.log(data);
         }).error(function(data, status, headers, config) {
@@ -41,6 +42,7 @@ angular.module('starter.controllers', ['ngCookies'])
 
     success(function(data, status, headers, config) {
         Notes = data['notes'];
+	$cookies['numInvitations'] = data['num_invitations'];
         $scope.notes = Notes;
     }).error(function(data, status, headers, config) {
         console.log(config);
@@ -78,6 +80,7 @@ angular.module('starter.controllers', ['ngCookies'])
             $scope.notey.fact3 = '';
             $scope.notey.fact3_data = data['data_points'][2];
         }
+	$cookies['numInvitations'] = data['num_invitations'];
     }).error(function(data, status, headers, config) {
         console.log(config);
         console.log(data);
@@ -96,13 +99,14 @@ angular.module('starter.controllers', ['ngCookies'])
             $scope.notey.fact3_data['datum'] = $scope.notey.fact3;
             new_data_points.push($scope.notey.fact3_data);
         }
-        $http.post(Globals.backendHostName() + 'notes/update_note/', {
+        Auth.post(Globals.backendHostName() + 'notes/update_note/', $cookies['userID'], $cookies['loginToken'], {
 	    'note_id': $stateParams.noteId,
 	    'is_new_note': false,
 	    'title': '$scope.notey.title',
 	    summary: $scope.notey.summary,
 	    data_points: new_data_points
 	}).success(function(data, status, headers, config) {
+	    $cookies['numInvitations'] = data['num_invitations'];
             console.log(config);
             console.log(data);
         }).error(function(data, status, headers, config) {
@@ -113,9 +117,93 @@ angular.module('starter.controllers', ['ngCookies'])
 
 })
 
-.controller('AccountCtrl', function($scope, $cookies) {
+.controller('CreateUserCtrl', function($scope, Globals, $stateParams, $ionicPopup, $http, $state) {
+    $scope.data = {};
+    console.log("in createuser");
+    $scope.createAccount = function() {
+	console.log($scope.data.password);
+	console.log($scope.data.username);
+	console.log($scope.data.firstName);
+	console.log($scope.data.lastName);
+	console.log($scope.data.email);
+	if ($scope.data.password == $scope.data.password_verify){
+	    $http.post(Globals.backendHostName() + 'account/new_user/', {
+		"user_id"    : $stateParams.inviterID,
+		"invite_hash": $stateParams.hash,
+		"username"   : $scope.data.username,
+		"password"   : $scope.data.password,
+		"first_name" : $scope.data.firstName,
+		"last_name"  : $scope.data.lastName,
+		"email"      : $scope.data.email
+	    }).success(function(data, status, headers, config) {
+		if (data['success']){
+		    $state.go('login');
+		}
+		else if (data['username_taken']){
+		    var alertPopup = $ionicPopup.alert({
+			title: 'Username is taken.',
+			template: 'Please try a different username.'
+		    }) ;
+		}
+		else{
+		    var alertPopup = $ionicPopup.alert({
+			title: 'Unable to make account!',
+			template: 'Please try to create your account again later. Sorry for the inconvenience.'
+		    }) ;
+		}
+	    }).error(function(data, status, headers, config) {
+		var alertPopup = $ionicPopup.alert({
+		    title: 'Unable to make account!',
+		    template: 'Please try to create your account again later. Sorry for the inconvenience.'
+		}) 
+	    });
+	}
+	else {
+	    var alertPopup = $ionicPopup.alert({
+		title: 'Passwords do not match',
+		template: 'Please retype your password'
+	    }) 
+	}
+    };
+})
+
+.controller('AccountCtrl', function($scope, $cookies, Auth, Globals, $ionicPopup) {
+    $scope.data = {};
+    $scope.numInvitations = $cookies['numInvitations'];
+    console.log($scope.numInvitations);
     $scope.settings = {
         enableFriends: true
+    };
+
+    $scope.invite = function(){
+	Auth.post(Globals.backendHostName() + 'account/invite/', $cookies['userID'], $cookies['loginToken'], {
+	    "invitee": $scope.data.inviteEmail,
+	    "front_end_url": "http://www.ripplenote.com/#/new" //"http://www.ripplenote.com/account/new"
+	}).success(function(data, status, headers, config){
+	    $cookies['numInvitations'] = data['num_invitations'];
+	    if (data['success']) {
+		var alertPopup = $ionicPopup.alert({
+		    title: 'Invitation sent!',
+		    template: 'Your friend should receive an email shortly! You have ' + $cookies['numInvitations'] + ' invitations left.'
+		}) 
+            }
+	    else {
+		var alertPopup = $ionicPopup.alert({
+		    title: 'Unable to send email!',
+		    template: 'Error: ' + data['error'] // remove this when more public
+		}) 
+	    }
+
+	}).error(function(data, status, headers, config){
+	    console.log(data);
+	    console.log(status);
+	    console.log(headers);
+	    console.log(config);
+	    var alertPopup = $ionicPopup.alert({
+		title: 'Unable to send invitation!',
+		template: 'Please try inviting again later.'
+	    })
+	});
     };
 })
 
@@ -128,7 +216,8 @@ angular.module('starter.controllers', ['ngCookies'])
     };
     
     $scope.login = function() {
-	//$http.post(Globals.backendHostName() + 'login/token/new.json', {'username': $scope.data.username, 'password': $scope.data.password}).
+	console.log($scope.data.username);
+	console.log($scope.data.password);
 	$http({
 	    url: Globals.backendHostName() + 'login/token/new.json',
 	    method: 'POST',

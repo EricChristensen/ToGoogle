@@ -4,6 +4,21 @@
     <ion-toggle  ng-model="settings.enableFriends">
         Enable Friends
     </ion-toggle>
+    <div ng-switch="numInvitations">
+      <div ng-switch-when="0"></div>
+      <div ng-switch-default class="list list-inset">
+	<div class="card">
+	  <div class="item item-divider">
+	    Invite a Friend to RippleNote!
+	  </div>
+	  <!-- If this form requires additional fields to invite friends, add it here -->
+	  <label class="item item-input">
+	    <input type="text" placeholder="friend@friendlyplace.com" ng-model="data.inviteEmail">
+	  </label>
+	  <button class="button button-block button-calm" ng-click="invite()">Invite!</button>
+	</div>
+      </div>
+    </div>
     </ion-list>
   </ion-content>
 </ion-view>

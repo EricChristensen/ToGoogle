@@ -1,0 +1,25 @@
+<ion-view view-title="Account Creation" name="new-user-view">
+  <ion-content class="padding">
+    <div class="list list-inset">
+      <label class="item item-input">
+	<input type="text" placeholder="First Name" ng-model="data.firstName">
+      </label>
+      <label class="item item-input">
+	<input type="text" placeholder="Last Name" ng-model="data.lastName">
+      </label>
+      <label class="item item-input">
+	<input type="text" placeholder="Username" ng-model="data.username">
+      </label>
+      <label class="item item-input">
+	<input type="password" placeholder="Password" ng-model="data.password">
+      </label>
+      <label class="item item-input">
+	<input type="password" placeholder="Verify Password" ng-model="data.password_verify">
+      </label>
+      <label class="item item-input">
+	<input type="text" placeholder="Email" ng-model="data.email">
+      </label>
+    </div>
+    <button class="button button-block button-calm" ng-click="createAccount()">Start Making Waves!</button>
+  </ion-content>
+</ion-view>
