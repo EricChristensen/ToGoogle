@@ -1,6 +1,6 @@
 angular.module('starter.controllers', ['ngCookies'])
 
-.controller('DashCtrl', function($scope, $sce, $http, Notes, Globals, Auth, $cookies) {
+.controller('DashCtrl', function($scope, $sce, $http, Notes, Globals, Auth, $cookies, $ionicPopup) {
     $scope.query = {};
     $scope.query.text = "";
 
@@ -23,10 +23,23 @@ angular.module('starter.controllers', ['ngCookies'])
 	    'title': $scope.query.text,
 	    summary: $scope.newNote.summary,
 	    data_points: data_pts
-	}).success(function(data, status, headers, config) {
-	    $cookies['numInvitations'] = data['num_invitations'];
+	}).success(function(data, status, headers, config) {	    
             console.log(config);
             console.log(data);
+
+	    if (data['success']) {
+		$cookies['numInvitations'] = data['num_invitations'];
+		var alertPopup = $ionicPopup.alert({
+		    title: 'Note saved!',
+		    template: ''
+		}) ;
+	    }
+	    else {
+		var alertPopup = $ionicPopup.alert({
+		    title: 'Unable to save!',
+		    template: 'Error: ' + data['error']
+		}) ;
+	    }
         }).error(function(data, status, headers, config) {
             console.log(config);
             console.log(data);
