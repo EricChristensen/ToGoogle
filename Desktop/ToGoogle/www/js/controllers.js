@@ -18,7 +18,6 @@ angular.module('starter.controllers', ['ngCookies'])
 	console.log('userID:' +  $cookies['userID']);
 	console.log('logintoken: ' + $cookies['loginToken']);
         Auth.post(Globals.backendHostName() + 'notes/update_note/', $cookies['userID'], $cookies['loginToken'], {
-	    //'username': 'test_user', password: 'testpassword',
 	    'is_new_note': true,
 	    'title': $scope.query.text,
 	    summary: $scope.newNote.summary,
@@ -93,60 +92,47 @@ $scope.remove = function(noteToDelete, index) {
 
 })
 
-.controller('NoteDetailCtrl', function($scope, $stateParams, Notes, Globals, $sce, $http, Auth, $cookies) {
+.controller('NoteDetailCtrl', function($scope, $stateParams, Notes, Globals, $sce, $http, Auth, $cookies, $ionicPopup) {
     $scope.note = {};
-     Auth.post(Globals.backendHostName() + 'notes/single/', $cookies['userID'], $cookies['loginToken'], {
+    $scope.datapoints = [];
+    var postComplete = false;
+    var mkEmptyNote = function(){ return { 'datum': '', 'creation_date_time': '' }; }
+    Auth.post(Globals.backendHostName() + 'notes/single/', $cookies['userID'], $cookies['loginToken'], {
 	'note_id': $stateParams.noteId
     }).success(function(data, status, headers, config) {
         $scope.notey = data;
-        console.log(data);
+
         $scope.note.currentURL = $sce.trustAsResourceUrl('https://duckduckgo.com/?q='+ data['title'] +'&kp=-1&kl=us-en');
-        if (data['data_points'][0]) {
-            $scope.notey.fact1 = data['data_points'][0]['datum'];
-            $scope.notey.fact1_data = data['data_points'][0];
-        } else {
-            $scope.notey.fact1 = '';
-            $scope.notey.fact1_data = data['data_points'][0];
-        }
-        if (data['data_points'][1]) {
-            $scope.notey.fact2 = data['data_points'][1]['datum'];
-            $scope.notey.fact2_data = data['data_points'][1];
-        } else {
-            $scope.notey.fact2 = '';
-            $scope.notey.fact2_data = data['data_points'][1];
-        }
-        if (data['data_points'][2]) {
-            $scope.notey.fact3 = data['data_points'][2]['datum'];
-            $scope.notey.fact3_data = data['data_points'][2];
-        } else {
-            $scope.notey.fact3 = '';
-            $scope.notey.fact3_data = data['data_points'][2];
-        }
+	
+	$scope.datapoints = data['data_points']; // Changing over to array-based datapoints, finally
+	$scope.datapoints.push(mkEmptyNote());
+	console.log($scope.datapoints);
+	
 	$cookies['numInvitations'] = data['num_invitations'];
+	postComplete = true;
     }).error(function(data, status, headers, config) {
         console.log(config);
         console.log(data);
     });
 
+    console.log($scope.datapoints);
+    // Adds empty datapoints dynamically    
+    
+    $scope.pushEmptyDatapoint = function(){
+	var emptyNote = { 'datum': '', 'creation_date_time': '' };
+	$scope.datapoints.push(emptyNote);
+    };
+
 
 
     $scope.save = function(note) {
-        $scope.notey.fact1_data['datum'] = $scope.notey.fact1;
-        new_data_points = [$scope.notey.fact1_data];
-        if ($scope.notey.fact2_data) {
-            $scope.notey.fact2_data['datum'] = $scope.notey.fact2;
-            new_data_points.push($scope.notey.fact2_data);
-        }
-        if ($scope.notey.fact2_data) {
-            $scope.notey.fact3_data['datum'] = $scope.notey.fact3;
-            new_data_points.push($scope.notey.fact3_data);
-        }
+	var dataPointsToSave = $scope.datapoints.filter(function(pt) { return pt.datum });
         Auth.post(Globals.backendHostName() + 'notes/update_note/', $cookies['userID'], $cookies['loginToken'], {
 	    'note_id': $stateParams.noteId,
 	    'is_new_note': false,
 	    'title': '$scope.notey.title',
 	    summary: $scope.notey.summary,
-	    data_points: new_data_points
+	    data_points: dataPointsToSave
 	}).success(function(data, status, headers, config) {
 	    if (data['success']) {
 		$cookies['numInvitations'] = data['num_invitations'];
@@ -166,6 +152,21 @@ $scope.remove = function(noteToDelete, index) {
             console.log(data);
         });
     }
+
+    // Pushes new empty notes dynamically 
+    $scope.$watch(
+	function() {
+	    if (postComplete){
+		return $scope.datapoints[$scope.datapoints.length - 1].datum;
+	    }
+	    return '';
+	},
+	function(newDatum, oldDatum) {
+	    if ( (newDatum !== oldDatum && oldDatum === '') ) {
+		$scope.datapoints.push(mkEmptyNote());
+	    }
+	}
+    );
 
 })
 

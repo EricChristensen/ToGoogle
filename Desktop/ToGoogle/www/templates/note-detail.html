@@ -4,13 +4,14 @@
             <div class="col col-75">
                 <iframe sandbox="allow-same-origin allow-scripts allow-popups allow-forms" ng-src="{{note.currentURL}}" height="75vh" ></iframe>
             </div>
-            <div class="col col-25">
+            <div class="col col-25" style="height:100%">
                 <div class="card animated slideInUp">
                     <label class="item item-input">
                         <span class="input-label">Search</span>
                         <input type="text" placeholder='"iPhone Processor"' ng-model="notey.title">
                     </label>
                 </div>
+		<!--
                 <div class="card">
                     <div class="item item-divider">
                         Facts
@@ -27,8 +28,9 @@
                         <span class="input-label">Fact 3</span>
                         <input type="text" placeholder="Fact 3" value="{{notey.fact3}}">
                     </label>
-
-                </div>
+                </div> -->
+		<!-- Inserting datapoint-list.html here-->
+		<ng-include src='"templates/datapoint-list.html"'> </ng-include>
             </div>
         </div>
     </div>
