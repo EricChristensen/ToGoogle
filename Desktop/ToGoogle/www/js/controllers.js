@@ -48,19 +48,48 @@ angular.module('starter.controllers', ['ngCookies'])
 
 })
 
-.controller('NotesCtrl', function($scope, Notes, $http, Globals, Auth, $cookies) {
+.controller('NotesCtrl', function($scope, Notes, $http, Globals, Auth, $cookies, $ionicPopup) {
     console.log('in NotesCtrl!');
     console.log('UserID: ' + $cookies['userID'] + ' loginToken: ' + $cookies['loginToken']);
-    Auth.get(Globals.backendHostName() + 'notes/', $cookies['userID'], $cookies['loginToken']).
 
-    success(function(data, status, headers, config) {
-        Notes = data['notes'];
-	$cookies['numInvitations'] = data['num_invitations'];
-        $scope.notes = Notes;
-    }).error(function(data, status, headers, config) {
-        console.log(config);
-        console.log(data);
-    });
+    Auth.get(Globals.backendHostName() + 'notes/', $cookies['userID'], $cookies['loginToken']).
+      success(function(data, status, headers, config) {
+          Notes = data['notes'];
+	  $cookies['numInvitations'] = data['num_invitations'];
+          $scope.notes = Notes;
+      }).error(function(data, status, headers, config) {
+          console.log(config);
+          console.log(data);
+      });
+
+$scope.remove = function(noteToDelete, index) {
+	console.log(noteToDelete);
+	Auth.del(Globals.backendHostName() + 'notes/update_note/', $cookies['userID'], $cookies['loginToken'], { 'note_id' : noteToDelete.note_id }).
+	    success(function(data, status, headers, config) {
+		if (data['success']) {
+		    console.log($scope.notes);
+		    
+		    $scope.notes.splice(index, 1);
+		    $cookies['numInvitations'] = data['num_invitations'];
+		    
+		    var alertPopup = $ionicPopup.alert({
+			title: 'Note Deleted',
+			template: ''
+		    }) ;
+		}
+		else{
+		    var alertPopup = $ionicPopup.alert({
+			title: 'Unable to Delete Note',
+			template: 'Error: ' + data['error']
+		    }) ;
+		}
+	    }).error(function(data, status, headers, config) {
+		var alertPopup = $ionicPopup.alert({
+		    title: 'Unable to access database.',
+		    template: 'Please try to delete again later.'
+		}) ;
+	    });
+    };
 
 })
 
@@ -144,11 +173,6 @@ angular.module('starter.controllers', ['ngCookies'])
     $scope.data = {};
     console.log("in createuser");
     $scope.createAccount = function() {
-	console.log($scope.data.password);
-	console.log($scope.data.username);
-	console.log($scope.data.firstName);
-	console.log($scope.data.lastName);
-	console.log($scope.data.email);
 	if ($scope.data.password == $scope.data.password_verify){
 	    $http.post(Globals.backendHostName() + 'account/new_user/', {
 		"user_id"    : $stateParams.inviterID,

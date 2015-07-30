@@ -1,12 +1,12 @@
 <ion-view view-title="My Notes">
   <ion-content>
     <ion-list>
-      <ion-item class="item-remove-animate item-icon-right" ng-repeat="note in notes" type="item-text-wrap" href="#/tab/notes/{{note.note_id}}">
+      <ion-item class="item-remove-animate item-icon-right" ng-repeat="note in notes " type="item-text-wrap" href="#/tab/notes/{{note.note_id}}">	
         <h2>{{note.title}}</h2>
         <p>{{note.summary}}</p>
         <i class="icon ion-chevron-right icon-accessory"></i>
 
-        <ion-option-button class="button-assertive" ng-click="remove(note)">
+        <ion-option-button class="button-assertive" ng-click="notes=remove(note, $index)">
           Delete
         </ion-option-button>
       </ion-item>

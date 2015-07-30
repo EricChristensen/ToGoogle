@@ -30,7 +30,17 @@ angular.module('starter.services', ['base64'])
 		    'Authorization': 'Basic ' + $base64.encode(userID + ':' + token)
 		}
 	    });
-	}	
+	},
+	del  : function(path, userID, token, data) {
+	    return $http({
+		method: "DELETE",
+		url: path,
+		headers: {
+		    'Authorization': 'Basic ' + $base64.encode(userID + ':' + token)
+		},
+		data : data		
+	    })
+	}
     }
 })
 
