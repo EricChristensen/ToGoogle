@@ -7,7 +7,7 @@
     <div class="item animated slideInUp" ng-repeat="point in datapoints | orderBy : creation_date_time" type="item-text-wrap">
       <label class="item item-input item-floating-label">
 	<span class="input-label">DataPoint {{$index + 1}}</span>
-	<input type="text" placeholder="Fact {{$index + 1}}" ng-model="point.datum"><!--value="{{point.datum}}" >-->
+	<input type="text" placeholder="DataPoint {{$index + 1}}" ng-model="point.datum"><!--value="{{point.datum}}" >-->
       </label>
     </div>
     <!--  </ion-list>-->
