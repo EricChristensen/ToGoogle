@@ -1,19 +1,22 @@
-<ion-view  view-title="{{title}}">
+<ion-view  view-title="{{ title }}">
   <ion-content class="">
-<!--      <label class="item item-input">
-	<input type="text" placeholder="Title" ng-model="title">
-      </label>-->
         <div class="row topbar">
           <div class="col col-75">
               <iframe  sandbox="allow-same-origin allow-scripts allow-popups allow-forms" ng-src="{{query.currentURL}}" height="75vh" ></iframe>
           </div>
-            <div class="col col-25" style="height:100%">
-                <div class="card animated slideInUp">
-                    <label class="item item-input">
-                        <span class="input-label">Search</span>
-                        <input type="text" placeholder='"iPhone Processor"' ng-model="query.text">
-                    </label>
-                </div>
+          <div class="col col-25" style="height:100%">
+	    <div class="card animated slideInUp">
+              <label class="item item-input">
+                <span class="input-label">Title</span>
+                <input type="text" placeholder="Makin' Waves" ng-model="note.title">
+              </label>
+            </div>
+            <div class="card animated slideInUp">
+              <label class="item item-input">
+                <span class="input-label">Search</span>
+                <input type="text" placeholder='"iPhone Processor"' ng-model="query.text">
+              </label>
+            </div>
                 <a style="margin:10px;" class="button button-block text- button-outline button-balanced" ng-click="search()">Search</a>
 		<ng-include src='"templates/datapoint-list.html"'> </ng-include>
             </div>

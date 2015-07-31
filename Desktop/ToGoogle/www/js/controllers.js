@@ -52,7 +52,7 @@ angular.module('starter.controllers', ['ngCookies'])
     $scope.query = {};    
     $scope.note.summary = '';
     $scope.datapoints = [];
-    $scope.title = '';
+    $scope.note.title = '';
     var postComplete = false;
 
     var retrieveNote = $stateParams.noteId;
@@ -73,7 +73,7 @@ angular.module('starter.controllers', ['ngCookies'])
 	Auth.post(Globals.backendHostName() + 'notes/single/', $cookies['userID'], $cookies['loginToken'], {
 	    'note_id': $stateParams.noteId
 	}).success(function(data, status, headers, config) {
-	    $scope.title = data['title'];
+	    $scope.note.title = data['title'];
 	    if (data['queries'] !== [] ) {
 		$scope.query.text = data['queries'][data['queries'].length - 1];		
 	    } else {	    
@@ -119,9 +119,9 @@ angular.module('starter.controllers', ['ngCookies'])
 	    postJSON['is_new_note'] = false	    
 	} else {
 	    postJSON['is_new_note'] = true;
-	    $scope.title = $scope.query.text;
+//	    $scope.note.title = $scope.query.text;
 	}
-	postJSON['title'] = $scope.title;
+	postJSON['title'] = $scope.note.title;
 	postJSON['summary'] = $scope.note.summary;
 	postJSON['data_points'] = dataPointsToSave;
 	postJSON['queries'] = allQueries;
