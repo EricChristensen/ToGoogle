@@ -5,8 +5,8 @@ angular.module('starter.controllers', ['ngCookies'])
     $scope.query.text = "";
 
     $scope.search = function() {
-	$scope.query.currentURL = $sce.trustAsResourceUrl('https://duckduckgo.com/?q='+ $scope.query.text +'&kp=-1&kl=us-en');
-    };
+        $scope.query.currentURL = $sce.trustAsResourceUrl('https://duckduckgo.com/?q='+ $scope.query.text +'&kp=-1&kl=us-en');
+    }
 
     $scope.newNote = {};
 
@@ -21,7 +21,8 @@ angular.module('starter.controllers', ['ngCookies'])
 	    'is_new_note': true,
 	    'title': $scope.query.text,
 	    summary: $scope.newNote.summary,
-	    data_points: data_pts
+	    data_points: data_pts,
+	    'queries': []
 	}).success(function(data, status, headers, config) {	    
             console.log(config);
             console.log(data);
@@ -93,61 +94,47 @@ $scope.remove = function(noteToDelete, index) {
 })
 
 .controller('NoteDetailCtrl', function($scope, $stateParams, Notes, Globals, $sce, $http, Auth, $cookies, $ionicPopup) {
-    var mkEmptyDatapoint = function(){ return { 'datum': '', 'creation_date_time': '' }; }
-    var allQueries = [];
-    $scope.query = {};    
     $scope.note = {};
     $scope.datapoints = [];
     var postComplete = false;
+    var mkEmptyNote = function(){ return { 'datum': '', 'creation_date_time': '' }; }
+    Auth.post(Globals.backendHostName() + 'notes/single/', $cookies['userID'], $cookies['loginToken'], {
+	'note_id': $stateParams.noteId
+    }).success(function(data, status, headers, config) {
+        $scope.notey = data;
 
-    var retrieveNote = $stateParams.noteId;
+        $scope.note.currentURL = $sce.trustAsResourceUrl('https://duckduckgo.com/?q='+ data['title'] +'&kp=-1&kl=us-en');
+	
+	$scope.datapoints = data['data_points']; // Changing over to array-based datapoints, finally
+	$scope.datapoints.push(mkEmptyNote());
+	console.log($scope.datapoints);
+	
+	$cookies['numInvitations'] = data['num_invitations'];
+	postComplete = true;
+    }).error(function(data, status, headers, config) {
+        console.log(config);
+        console.log(data);
+    });
+
+    console.log($scope.datapoints);
+    // Adds empty datapoints dynamically    
     
-    $scope.search = function() {
-	$scope.query.currentURL = $sce.trustAsResourceUrl('https://duckduckgo.com/?q='+ $scope.query.text +'&kp=-1&kl=us-en');
-    };
-
     $scope.pushEmptyDatapoint = function(){
 	var emptyNote = { 'datum': '', 'creation_date_time': '' };
 	$scope.datapoints.push(emptyNote);
     };
-    
-    if (retrieveNote) {
-	Auth.post(Globals.backendHostName() + 'notes/single/', $cookies['userID'], $cookies['loginToken'], {
-	    'note_id': $stateParams.noteId
-	}).success(function(data, status, headers, config) {
-	    $scope.title = data['title'];
-	    $scope.query.text = data['title'];
-            $scope.notey = data;
-	                
-	    
-	    $scope.datapoints = data['data_points']; 
-	    $scope.datapoints.push(mkEmptyDatapoint());
-	    console.log($scope.datapoints);
-	    
-	    $cookies['numInvitations'] = data['num_invitations'];
-	    console.log($scope.query.text);
-	    $scope.search();
-	    postComplete = true;
-	}).error(function(data, status, headers, config) {
-            console.log(config);
-            console.log(data);
-	});
-	
-	// Adds empty datapoints dynamically    	
-    } else {
-	$scope.pushEmptyDatapoint();
-	postComplete = true;
-    }
+
 
 
     $scope.save = function(note) {
 	var dataPointsToSave = $scope.datapoints.filter(function(pt) { return pt.datum });
         Auth.post(Globals.backendHostName() + 'notes/update_note/', $cookies['userID'], $cookies['loginToken'], {
 	    'note_id': $stateParams.noteId,
-	    'is_new_note': !retrieveNote, // if a note was retrieved then it is not new
-	    'title': '$scope.title',
-	    summary: $scope.summary,
-	    data_points: dataPointsToSave
+	    'is_new_note': false,
+	    'title': '$scope.notey.title',
+	    summary: $scope.notey.summary,
+	    data_points: dataPointsToSave,
+	    'queries': []
 	}).success(function(data, status, headers, config) {
 	    if (data['success']) {
 		$cookies['numInvitations'] = data['num_invitations'];
@@ -161,7 +148,7 @@ $scope.remove = function(noteToDelete, index) {
 		    title: 'Unable to save!',
 		    template: 'Error: ' + data['error']
 		}) ;
-	    }	    
+	    }
         }).error(function(data, status, headers, config) {
             console.log(config);
             console.log(data);
@@ -177,8 +164,8 @@ $scope.remove = function(noteToDelete, index) {
 	    return '';
 	},
 	function(newDatum, oldDatum) {
-	    if ( newDatum !== oldDatum && oldDatum === '') {
-		$scope.datapoints.push(mkEmptyDatapoint());
+	    if ( (newDatum !== oldDatum && oldDatum === '') ) {
+		$scope.datapoints.push(mkEmptyNote());
 	    }
 	}
     );
