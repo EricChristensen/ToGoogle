@@ -1,53 +1,5 @@
 angular.module('starter.controllers', ['ngCookies'])
 
-.controller('DashCtrl', function($scope, $sce, $http, Notes, Globals, Auth, $cookies, $ionicPopup) {
-    $scope.query = {};
-    $scope.query.text = "";
-
-    $scope.search = function() {
-	$scope.query.currentURL = $sce.trustAsResourceUrl('https://duckduckgo.com/?q='+ $scope.query.text +'&kp=-1&kl=us-en');
-    };
-
-    $scope.newNote = {};
-
-    $scope.save = function(note) {
-        data_pt_1 = {'datum': $scope.newNote.fact1};
-        data_pt_2 = {'datum': $scope.newNote.fact2};
-        data_pt_3 = {'datum': $scope.newNote.fact3};
-        data_pts = [data_pt_1,data_pt_2,data_pt_3];
-	console.log('userID:' +  $cookies['userID']);
-	console.log('logintoken: ' + $cookies['loginToken']);
-        Auth.post(Globals.backendHostName() + 'notes/update_note/', $cookies['userID'], $cookies['loginToken'], {
-	    'is_new_note': true,
-	    'title': $scope.query.text,
-	    summary: $scope.newNote.summary,
-	    data_points: data_pts,
-	    'queries': []
-	}).success(function(data, status, headers, config) {	    
-            console.log(config);
-            console.log(data);
-
-	    if (data['success']) {
-		$cookies['numInvitations'] = data['num_invitations'];
-		var alertPopup = $ionicPopup.alert({
-		    title: 'Note saved!',
-		    template: ''
-		}) ;
-	    }
-	    else {
-		var alertPopup = $ionicPopup.alert({
-		    title: 'Unable to save!',
-		    template: 'Error: ' + data['error']
-		}) ;
-	    }
-        }).error(function(data, status, headers, config) {
-            console.log(config);
-            console.log(data);
-        });
-    }
-
-})
-
 .controller('NotesCtrl', function($scope, Notes, $http, Globals, Auth, $cookies, $ionicPopup) {
     console.log('in NotesCtrl!');
     console.log('UserID: ' + $cookies['userID'] + ' loginToken: ' + $cookies['loginToken']);
@@ -108,6 +60,8 @@ angular.module('starter.controllers', ['ngCookies'])
     $scope.search = function() {
 	$scope.query.currentURL = $sce.trustAsResourceUrl('https://duckduckgo.com/?q='+ $scope.query.text +'&kp=-1&kl=us-en');
 	allQueries.push({'query': $scope.query.text});
+	console.log('in search call');
+	console.log(allQueries);
     };
 
     $scope.pushEmptyDatapoint = function(){
@@ -120,7 +74,11 @@ angular.module('starter.controllers', ['ngCookies'])
 	    'note_id': $stateParams.noteId
 	}).success(function(data, status, headers, config) {
 	    $scope.title = data['title'];
-	    $scope.query.text = data['title'];
+	    if (data['queries'] !== [] ) {
+		$scope.query.text = data['queries'][data['queries'].length - 1];		
+	    } else {	    
+		$scope.query.text = data['title'];
+	    }
 	    $scope.note.summary = data['summary'];
 	    
 	    $scope.datapoints = data['data_points']; 
