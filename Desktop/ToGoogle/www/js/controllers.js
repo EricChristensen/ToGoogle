@@ -1,9 +1,6 @@
 angular.module('starter.controllers', ['ngCookies'])
 
 .controller('NotesCtrl', function($scope, Notes, $http, Globals, Auth, $cookies, $ionicPopup) {
-    console.log('in NotesCtrl!');
-    console.log('UserID: ' + $cookies['userID'] + ' loginToken: ' + $cookies['loginToken']);
-
     Auth.get(Globals.backendHostName() + 'notes/', $cookies['userID'], $cookies['loginToken']).
       success(function(data, status, headers, config) {
           Notes = data['notes'];
@@ -15,11 +12,9 @@ angular.module('starter.controllers', ['ngCookies'])
       });
 
     $scope.remove = function(noteToDelete, index) {
-	console.log(noteToDelete);
 	Auth.del(Globals.backendHostName() + 'notes/update_note/', $cookies['userID'], $cookies['loginToken'], { 'note_id' : noteToDelete.note_id }).
 	    success(function(data, status, headers, config) {
 		if (data['success']) {
-		    console.log($scope.notes);
 		    
 		    $scope.notes.splice(index, 1);
 		    $cookies['numInvitations'] = data['num_invitations'];
@@ -60,8 +55,6 @@ angular.module('starter.controllers', ['ngCookies'])
     $scope.search = function() {
 	$scope.query.currentURL = $sce.trustAsResourceUrl('https://duckduckgo.com/?q='+ $scope.query.text +'&kp=-1&kl=us-en');
 	allQueries.push({'query': $scope.query.text});
-	console.log('in search call');
-	console.log(allQueries);
     };
 
     $scope.pushEmptyDatapoint = function(){
@@ -83,10 +76,8 @@ angular.module('starter.controllers', ['ngCookies'])
 	    
 	    $scope.datapoints = data['data_points']; 
 	    $scope.datapoints.push(mkEmptyDatapoint());
-	    console.log($scope.datapoints);
 	    
 	    $cookies['numInvitations'] = data['num_invitations'];
-	    console.log($scope.query.text);
 	    $scope.search();
 	    postComplete = true;
 	}).error(function(data, status, headers, config) {
@@ -110,7 +101,6 @@ angular.module('starter.controllers', ['ngCookies'])
 		   return {'datum': pt.datum };
 	       }
 	    });
-	console.log(dataPointsToSave);
 
 	var postJSON = {};
 
@@ -125,8 +115,6 @@ angular.module('starter.controllers', ['ngCookies'])
 	postJSON['summary'] = $scope.note.summary;
 	postJSON['data_points'] = dataPointsToSave;
 	postJSON['queries'] = allQueries;
-
-	console.log(postJSON);
 
         Auth.post(
 	    Globals.backendHostName() + 'notes/update_note/',
@@ -171,7 +159,6 @@ angular.module('starter.controllers', ['ngCookies'])
 
 .controller('CreateUserCtrl', function($scope, Globals, $stateParams, $ionicPopup, $http, $state) {
     $scope.data = {};
-    console.log("in createuser");
     $scope.createAccount = function() {
 	if ($scope.data.password == $scope.data.password_verify){
 	    $http.post(Globals.backendHostName() + 'account/new_user/', {
@@ -222,7 +209,6 @@ angular.module('starter.controllers', ['ngCookies'])
 .controller('AccountCtrl', function($scope, $cookies, Auth, Globals, $ionicPopup) {
     $scope.data = {};
     $scope.numInvitations = $cookies['numInvitations'];
-    console.log($scope.numInvitations);
     $scope.settings = {
         enableFriends: true
     };
@@ -268,8 +254,6 @@ angular.module('starter.controllers', ['ngCookies'])
     };
     
     $scope.login = function() {
-	console.log($scope.data.username);
-	console.log($scope.data.password);
 	$http({
 	    url: Globals.backendHostName() + 'login/token/new.json',
 	    method: 'POST',
