@@ -84,6 +84,7 @@ angular.module('starter.controllers', ['ngCookies'])
 	    for (tag in Tags.jsonToTags(data['tags'])) {
 		console.log('tag:');
 		console.log(tag);
+		console.log(Tags.jsonToTags(data['tags'])[tag]);
 		$scope.note.tagSet.push(tag);
 	    }
 	    //$scope.note.tagSet  = Tags.jsonToTags(data['tags']);
@@ -97,6 +98,7 @@ angular.module('starter.controllers', ['ngCookies'])
 		for (tag in Tags.jsonToTags(data['tags'])) {
 		    console.log('tag:');
 		    console.log(tag);
+		    console.log(Tags.jsonToTags(data['tags'])[tag]);
 		    pt.tagSet = [];
 		    pt.tagSet.push(tag)
 		}
