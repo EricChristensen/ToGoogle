@@ -93,6 +93,7 @@ angular.module('starter.controllers', ['ngCookies'])
 		console.log(pt.tags);
 		//pt.tagSet = Tags.jsonToTags(pt.tags);
 		for (tag in Tags.jsonToTags(data['tags'])) {
+		    pt.tagSet = [];
 		    pt.tagSet.push(tag)
 		}
 		console.log('datapoint tag - cleaned');
