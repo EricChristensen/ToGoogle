@@ -25,6 +25,11 @@ angular.module('starter.services', ['base64'])
 	    return set.map(function(tagEntity) {
 		return { 'tag': tagEntity.tagStr };
 	    });
+	},
+	jsonToTags: function(set) {
+	    return set.map(function(postTag) {
+		return { 'tagStr': postTag.tag };
+	    });
 	}
     }
 })

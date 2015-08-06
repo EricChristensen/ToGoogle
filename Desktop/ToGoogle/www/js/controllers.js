@@ -78,10 +78,10 @@ angular.module('starter.controllers', ['ngCookies'])
 		$scope.query.text = data['title'];
 	    }
 	    $scope.note.summary = data['summary'];
-	    $scope.note.tagSet  = data['tags'];
+	    $scope.note.tagSet  = Tags.jsonToTags(data['tags']);
 	    
 	    $scope.datapoints = data['data_points'].map(function(pt) {
-		pt.tagSet = pt.tags;
+		pt.tagSet = Tags.jsonToTags(pt.tags);
 		return pt;
 	    });
 	    
@@ -89,15 +89,6 @@ angular.module('starter.controllers', ['ngCookies'])
 	    
 	    $cookies['numInvitations'] = data['num_invitations'];
 	    $scope.search();
-
-            // REMOVE THIS WHOLE SECTION ONCE BACKEND HANDLES TAGGING
-	    if ($scope.note.tagSet === undefined) {
-		$scope.note.tagSet = [];
-		for (pt in $scope.datapoints) {
-		    pt['tagSet'] = [];
-		}
-	    }
-	    // END REMOVAL BLOCK
 	    
 	    postComplete = true;
 	}).error(function(data, status, headers, config) {
