@@ -1,0 +1,7 @@
+<div class="rn-horizontal-list-container" ng-controller="TagCtrl">
+  Tags:
+  <ul class="rn-horizontal-list" ng-repeat="tagEntity in tagSet" >
+    <li class="animated slideInUp">{{ tagEntity.tagStr }}</li>
+  </ul>
+  <input ng-model="newTagStr" ng-keypress="addTag($event)"> </input>
+</div> 
