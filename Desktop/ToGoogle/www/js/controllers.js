@@ -78,8 +78,13 @@ angular.module('starter.controllers', ['ngCookies'])
 		$scope.query.text = data['title'];
 	    }
 	    $scope.note.summary = data['summary'];
+	    $scope.note.tagSet  = data['tags'];
 	    
-	    $scope.datapoints = data['data_points']; 
+	    $scope.datapoints = data['data_points'].map(function(pt) {
+		pt.tagSet = pt.tags;
+		return pt;
+	    });
+	    
 	    $scope.datapoints.push(mkEmptyDatapoint());
 	    
 	    $cookies['numInvitations'] = data['num_invitations'];
