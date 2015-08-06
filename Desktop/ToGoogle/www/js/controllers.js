@@ -78,10 +78,18 @@ angular.module('starter.controllers', ['ngCookies'])
 		$scope.query.text = data['title'];
 	    }
 	    $scope.note.summary = data['summary'];
+	    console.log('note tag set- post');
+	    console.log(data['tags']);
 	    $scope.note.tagSet  = Tags.jsonToTags(data['tags']);
+	    console.log('note tag set-cleaned');
+	    console.log($scope.note.tagSet);
 	    
 	    $scope.datapoints = data['data_points'].map(function(pt) {
+		console.log('datapoint tag - post');
+		console.log(pt.tags);
 		pt.tagSet = Tags.jsonToTags(pt.tags);
+		console.log('datapoint tag - cleaned');
+		console.log(pt.tagSet);
 		return pt;
 	    });
 	    
