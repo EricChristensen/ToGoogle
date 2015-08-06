@@ -10,11 +10,23 @@ angular.module('starter.services', ['base64'])
 
 // This handles passing lists of tags back to a main controller
 .service('Tags', function(){
-    //var tagSets = {}; // keys provided by component requiring a tagset (usually the component itself)
+    var tagSets = {
+	'noteTagSet': [],
+	'dataPointSets': []
+    };
+    var set = [];
     return {
-	getNewTagSet: function(key) {
-	    var set = []; 
-	    return set;
+	setNoteTagSet: function(set) {
+	    tagSets['noteTagSet'] = set;
+	},
+	setDataPointSets: function(sets) {
+	    tagSets['dataPointSets'] = sets;
+	},	
+	getNoteTagSet: function() {
+	    return tagSets['noteTagSet'];
+	},
+	getDataPointSets : function() {
+	    return tagSets['dataPointSets'];
 	},
 	pushEmptyTag: function(set) {
 	    set.push({'tagStr': ''});
