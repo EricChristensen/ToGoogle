@@ -23,7 +23,7 @@ angular.module('starter.services', ['base64'])
 	    // This just takes the tagStr field for now. In the future
 	    // this may hold more data
 	    return set.map(function(tagEntity) {
-		return { 'tag': tagEntity.tagStr; }
+		return { 'tag': tagEntity.tagStr };
 	    });
 	}
     }
