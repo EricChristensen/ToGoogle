@@ -85,9 +85,9 @@ angular.module('starter.controllers', ['ngCookies'])
 	    }
 	    
 	    $scope.datapoints = data['data_points'].map(function(pt) {
-		var cleanedTags = Tags.jsonToTags(pt['tags']);		
+		var cleanedTags = Tags.jsonToTags(pt['tags']);
+		pt.tagSet = [];
 		for (tagIndex in cleanedTags) {
-		    pt.tagSet = [];
 		    pt.tagSet.push(cleanedTags[tagIndex])
 		}
 		return pt;
