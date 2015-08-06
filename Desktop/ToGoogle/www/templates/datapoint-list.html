@@ -3,13 +3,13 @@
     <div class="item item-divider">
       Datapoints
     </div>
-    <!--  <ion-list>-->
     <div class="item animated slideInUp" ng-repeat="point in datapoints | orderBy : creation_date_time" type="item-text-wrap">
       <label class="item item-input item-floating-label">
 	<span class="input-label">DataPoint {{$index + 1}}</span>
-	<input type="text" placeholder="DataPoint {{$index + 1}}" ng-model="point.datum"><!--value="{{point.datum}}" >-->
+	<input type="text" placeholder="DataPoint {{$index + 1}}" ng-model="point.datum">
       </label>
+      </br>
+      <ng-include src='"templates/tag-box.html"' ng-init="tagSet=point.tagSet"></ng-include>
     </div>
-    <!--  </ion-list>-->
   </div>
 </div>

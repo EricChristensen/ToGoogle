@@ -42,3 +42,21 @@ textarea {
 button.down {
     margin-top: 150px;;
 }
+
+/* Using rn as a 'namespace' for ripplenote styles */
+.rn-horizontal-list-container {
+    overflow-x:scroll;
+}
+.rn-horizontal-list-container * {
+    display:inline;
+}
+
+.rn-horizontal-list {
+    
+}
+.rn-horizontal-list li {
+    display:inline;
+    background-color: #0A9EC7;
+    border-radius: 20px;
+    padding: 3px;
+}

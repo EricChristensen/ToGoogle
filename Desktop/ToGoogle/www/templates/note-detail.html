@@ -31,10 +31,10 @@
                 <ion-item >
                     <textarea ng-model="note.summary" style="width:100%"></textarea>
                 </ion-item>
-		<!-- Insert tag include here (ion slide box maybe?)-->
-<!--		<div class="bar bar-footer bar-balance">
-		  <ng-include src="templates=tag-box.html"></ng-include>		    
-		</div>-->
+		<!--  Insert tag include here (ion slide box maybe?)-->
+		<div class="item item-divider">
+		  <ng-include src='"templates/tag-box.html"' ng-init="tagSet=note.tagSet"></ng-include>		    
+		</div>
             </div>
         </div>
         <div class="col col-25 text-center">

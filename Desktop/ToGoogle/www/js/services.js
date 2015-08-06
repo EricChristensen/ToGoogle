@@ -8,6 +8,27 @@ angular.module('starter.services', ['base64'])
     }
 })
 
+// This handles passing lists of tags back to a main controller
+.service('Tags', function(){
+    //var tagSets = {}; // keys provided by component requiring a tagset (usually the component itself)
+    return {
+	getNewTagSet: function(key) {
+	    var set = []; 
+	    return set;
+	},
+	pushEmptyTag: function(set) {
+	    set.push({'tagStr': ''});
+	},
+	tagsToJson: function(set) {
+	    // This just takes the tagStr field for now. In the future
+	    // this may hold more data
+	    return set.map(function(tagEntity) {
+		tagEntity.tagStr;
+	    });
+	}
+    }
+})
+
 .service('Auth', function($http, $cookies, $base64){
     return {
 	post : function(path, userID, token, data) {

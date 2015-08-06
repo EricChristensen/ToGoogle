@@ -40,14 +40,19 @@ angular.module('starter.controllers', ['ngCookies'])
 
 })
 
-.controller('NoteDetailCtrl', function($scope, $stateParams, Notes, Globals, $sce, $http, Auth, $cookies, $ionicPopup) {
-    var mkEmptyDatapoint = function(){ return { 'datum': '', 'creation_date_time': '' }; }
+.controller('NoteDetailCtrl', function($scope, $stateParams, Notes, Globals, $sce, $http, Auth, $cookies, $ionicPopup, Tags) {
+    var mkEmptyDatapoint = function(){ return {
+	'datum': '',
+	'creation_date_time': '',
+	'tagSet': []
+    }; }
     var allQueries = [];
     $scope.note = {};
     $scope.query = {};    
     $scope.note.summary = '';
     $scope.datapoints = [];
     $scope.note.title = '';
+    $scope.note.tagSet = [];
     var postComplete = false;
 
     var retrieveNote = $stateParams.noteId;
@@ -58,8 +63,8 @@ angular.module('starter.controllers', ['ngCookies'])
     };
 
     $scope.pushEmptyDatapoint = function(){
-	var emptyNote = { 'datum': '', 'creation_date_time': '' };
-	$scope.datapoints.push(emptyNote);
+	//var emptyDataPoint = { 'datum': '', 'creation_date_time': '' };
+	$scope.datapoints.push(mkEmptyDatapoint());
     };
     
     if (retrieveNote) {
@@ -79,6 +84,16 @@ angular.module('starter.controllers', ['ngCookies'])
 	    
 	    $cookies['numInvitations'] = data['num_invitations'];
 	    $scope.search();
+
+            // REMOVE THIS WHOLE SECTION ONCE BACKEND HANDLES TAGGING
+	    if ($scope.note.tagSet === undefined) {
+		$scope.note.tagSet = [];
+		for (pt in $scope.datapoints) {
+		    pt['tagSet'] = [];
+		}
+	    }
+	    // END REMOVAL BLOCK
+	    
 	    postComplete = true;
 	}).error(function(data, status, headers, config) {
             console.log(config);
@@ -94,28 +109,38 @@ angular.module('starter.controllers', ['ngCookies'])
 
     $scope.save = function(note) {
 	var dataPointsToSave = $scope.datapoints.filter(function(pt) { return pt.datum }).
-	    map(function(pt){
+	    map(function(pt){		
 		if (pt.data_point_id){
-		    return {'datum': pt.datum, 'data_point_id': pt.data_point_id} ;
+		    return {
+			'datum': pt.datum,
+			'data_point_id': pt.data_point_id,
+			'tags' : Tags.tagsToJson(pt.tagSet)			
+		    } ;
 	       } else {
-		   return {'datum': pt.datum };
+		   return {
+		       'datum': pt.datum,
+		       'tags' : Tags.tagsToJson(pt.tagSet)
+		   };
 	       }
 	    });
 
 	var postJSON = {};
 
+	console.log("Note Tags in save!");
+	
 	if ($stateParams.noteId) {
 	    postJSON['note_id'] = $stateParams.noteId;
 	    postJSON['is_new_note'] = false	    
 	} else {
 	    postJSON['is_new_note'] = true;
-//	    $scope.note.title = $scope.query.text;
 	}
 	postJSON['title'] = $scope.note.title;
 	postJSON['summary'] = $scope.note.summary;
 	postJSON['data_points'] = dataPointsToSave;
 	postJSON['queries'] = allQueries;
+	postJSON['tags']    = Tags.tagsToJson($scope.note.tagSet);
 
+	console.log(postJSON);
         Auth.post(
 	    Globals.backendHostName() + 'notes/update_note/',
 	    $cookies['userID'], $cookies['loginToken'],
@@ -286,5 +311,18 @@ angular.module('starter.controllers', ['ngCookies'])
 		template: 'Could not connect to login service!'
 	    });		
 	});
+    };
+})
+
+.controller('TagCtrl', function($scope, Tags) {
+    $scope.newTagStr = '';
+    //$scope.tagSet = Tags.getNewTagSet(); // This should probably be done by the parent controller
+
+    $scope.addTag = function(event) {
+	if (event.keyCode == 13){
+	    Tags.pushEmptyTag($scope.tagSet);
+	    $scope.tagSet[$scope.tagSet.length - 1].tagStr = $scope.newTagStr;
+	    $scope.newTagStr = '';
+	}
     };
 })
