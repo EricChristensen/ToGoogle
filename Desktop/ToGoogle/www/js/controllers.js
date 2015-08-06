@@ -80,14 +80,21 @@ angular.module('starter.controllers', ['ngCookies'])
 	    $scope.note.summary = data['summary'];
 	    console.log('note tag set- post');
 	    console.log(data['tags']);
-	    $scope.note.tagSet  = Tags.jsonToTags(data['tags']);
+	    // Copy post tags into *existing* tagSet array (this reference is used in the tag controller)
+	    for (tag in Tags.jsonToTags(data['tags']) {
+		$scope.note.tagSet.push(tag)
+	    }
+	    //$scope.note.tagSet  = Tags.jsonToTags(data['tags']);
 	    console.log('note tag set-cleaned');
 	    console.log($scope.note.tagSet);
 	    
 	    $scope.datapoints = data['data_points'].map(function(pt) {
 		console.log('datapoint tag - post');
 		console.log(pt.tags);
-		pt.tagSet = Tags.jsonToTags(pt.tags);
+		//pt.tagSet = Tags.jsonToTags(pt.tags);
+		for (tag in Tags.jsonToTags(data['tags']) {
+		    pt.tagSet.push(tag)
+		}
 		console.log('datapoint tag - cleaned');
 		console.log(pt.tagSet);
 		return pt;
